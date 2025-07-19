@@ -79,8 +79,15 @@ export const APIKeyManager: React.FC<APIKeyManagerProps> = ({ provider, apiKey, 
 
     // Save to cookies
     const currentKeys = getApiKeysFromCookies();
+
     const newKeys = { ...currentKeys, [provider.name]: tempKey };
-    Cookies.set('apiKeys', JSON.stringify(newKeys));
+
+    // Filter out empty keys before saving to cookies
+    const filteredKeys = Object.fromEntries(
+      Object.entries(newKeys).filter(([_, value]) => value && value.trim() !== ''),
+    );
+
+    Cookies.set('apiKeys', JSON.stringify(filteredKeys));
 
     setIsEditing(false);
   };
