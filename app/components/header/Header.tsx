@@ -15,12 +15,21 @@ export function Header() {
         'border-bolt-elements-borderColor': chat.started,
       })}
     >
-      <div className="flex items-center gap-2 z-logo text-bolt-elements-textPrimary cursor-pointer">
-        <div className="i-ph:sidebar-simple-duotone text-xl" />
-        <a href="/" className="text-2xl font-semibold text-accent flex items-center">
-          {/* <span className="i-bolt:logo-text?mask w-[46px] inline-block" /> */}
-          <img src="/logo-light-styled.png" alt="logo" className="w-[90px] inline-block dark:hidden" />
-          <img src="/logo-dark-styled.png" alt="logo" className="w-[90px] inline-block hidden dark:block" />
+      <div className="flex items-center gap-3 z-logo text-bolt-elements-textPrimary cursor-pointer">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 shadow-sm">
+          <div className="i-ph:sidebar-simple-duotone text-white text-lg" />
+        </div>
+        <a href="/" className="flex items-center group transition-all duration-200">
+          <img
+            src="/logo-light-styled.png"
+            alt="logo"
+            className="w-[90px] inline-block dark:hidden transition-transform duration-200 group-hover:scale-105"
+          />
+          <img
+            src="/logo-dark-styled.png"
+            alt="logo"
+            className="w-[90px] inline-block hidden dark:block transition-transform duration-200 group-hover:scale-105"
+          />
         </a>
       </div>
       {chat.started && ( // Display ChatDescription and HeaderActionButtons only when the chat has started.
