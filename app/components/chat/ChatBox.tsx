@@ -67,15 +67,13 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   return (
     <div
       className={classNames(
-        'relative bg-bolt-elements-background-depth-2 backdrop-blur p-3 rounded-lg border border-bolt-elements-borderColor relative w-full max-w-chat mx-auto z-prompt',
-
-        /*
-         * {
-         *   'sticky bottom-2': chatStarted,
-         * },
-         */
+        'relative bg-bolt-elements-background-depth-2 backdrop-blur-sm p-4 rounded-xl border border-bolt-elements-borderColor/60 w-full max-w-chat mx-auto z-prompt',
+        'shadow-lg shadow-bolt-elements-background-depth-1/20',
+        'transition-all duration-300 ease-out',
+        'hover:border-bolt-elements-borderColor/80 hover:shadow-xl hover:shadow-bolt-elements-background-depth-1/30',
       )}
     >
+      {/* Enhanced visual effects */}
       <svg className={classNames(styles.PromptEffectContainer)}>
         <defs>
           <linearGradient
@@ -102,44 +100,59 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
         <rect className={classNames(styles.PromptEffectLine)} pathLength="100" strokeLinecap="round"></rect>
         <rect className={classNames(styles.PromptShine)} x="48" y="24" width="70" height="1"></rect>
       </svg>
-      <div>
+
+      {/* Model Settings Section */}
+      <div className="mb-4">
         <ClientOnly>
           {() => (
-            <div className={props.isModelSettingsCollapsed ? 'hidden' : ''}>
-              <ModelSelector
-                key={props.provider?.name + ':' + props.modelList.length}
-                model={props.model}
-                setModel={props.setModel}
-                modelList={props.modelList}
-                provider={props.provider}
-                setProvider={props.setProvider}
-                providerList={props.providerList || (PROVIDER_LIST as ProviderInfo[])}
-                apiKeys={props.apiKeys}
-                modelLoading={props.isModelLoading}
-              />
-              {(props.providerList || []).length > 0 &&
-                props.provider &&
-                (!LOCAL_PROVIDERS.includes(props.provider.name) || 'OpenAILike') && (
-                  <APIKeyManager
-                    provider={props.provider}
-                    apiKey={props.apiKeys[props.provider.name] || ''}
-                    setApiKey={(key) => {
-                      props.onApiKeysChange(props.provider.name, key);
-                    }}
-                  />
-                )}
+            <div
+              className={classNames(
+                'transition-all duration-300 ease-in-out overflow-hidden',
+                props.isModelSettingsCollapsed ? 'max-h-0 opacity-0' : 'max-h-96 opacity-100',
+              )}
+            >
+              <div className="space-y-3">
+                <ModelSelector
+                  key={props.provider?.name + ':' + props.modelList.length}
+                  model={props.model}
+                  setModel={props.setModel}
+                  modelList={props.modelList}
+                  provider={props.provider}
+                  setProvider={props.setProvider}
+                  providerList={props.providerList || (PROVIDER_LIST as ProviderInfo[])}
+                  apiKeys={props.apiKeys}
+                  modelLoading={props.isModelLoading}
+                />
+                {(props.providerList || []).length > 0 &&
+                  props.provider &&
+                  (!LOCAL_PROVIDERS.includes(props.provider.name) || 'OpenAILike') && (
+                    <APIKeyManager
+                      provider={props.provider}
+                      apiKey={props.apiKeys[props.provider.name] || ''}
+                      setApiKey={(key) => {
+                        props.onApiKeysChange(props.provider.name, key);
+                      }}
+                    />
+                  )}
+              </div>
             </div>
           )}
         </ClientOnly>
       </div>
-      <FilePreview
-        files={props.uploadedFiles}
-        imageDataList={props.imageDataList}
-        onRemove={(index) => {
-          props.setUploadedFiles?.(props.uploadedFiles.filter((_, i) => i !== index));
-          props.setImageDataList?.(props.imageDataList.filter((_, i) => i !== index));
-        }}
-      />
+
+      {/* File Preview Section */}
+      <div className="mb-3">
+        <FilePreview
+          files={props.uploadedFiles}
+          imageDataList={props.imageDataList}
+          onRemove={(index) => {
+            props.setUploadedFiles?.(props.uploadedFiles.filter((_, i) => i !== index));
+            props.setImageDataList?.(props.imageDataList.filter((_, i) => i !== index));
+          }}
+        />
+      </div>
+
+      {/* Screenshot State Manager */}
       <ClientOnly>
         {() => (
           <ScreenshotStateManager
@@ -150,47 +163,62 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
           />
         )}
       </ClientOnly>
+
+      {/* Selected Element Indicator */}
       {props.selectedElement && (
-        <div className="flex mx-1.5 gap-2 items-center justify-between rounded-lg rounded-b-none border border-b-none border-bolt-elements-borderColor text-bolt-elements-textPrimary flex py-1 px-2.5 font-medium text-xs">
-          <div className="flex gap-2 items-center lowercase">
-            <code className="bg-accent-500 rounded-4px px-1.5 py-1 mr-0.5 text-white">
+        <div className="flex mx-1 gap-3 items-center justify-between rounded-lg rounded-b-none border border-b-none border-bolt-elements-borderColor/60 text-bolt-elements-textPrimary py-2 px-3 font-medium text-xs bg-bolt-elements-background-depth-1/50 backdrop-blur-sm">
+          <div className="flex gap-2 items-center">
+            <code className="bg-accent-500/90 rounded-md px-2 py-1 text-white font-mono text-xs shadow-sm">
               {props?.selectedElement?.tagName}
             </code>
-            selected for inspection
+            <span className="text-bolt-elements-textSecondary">selected for inspection</span>
           </div>
           <button
-            className="bg-transparent text-accent-500 pointer-auto"
+            className="bg-transparent text-accent-500 hover:text-accent-400 transition-colors duration-200 text-xs font-medium px-2 py-1 rounded-md hover:bg-accent-500/10"
             onClick={() => props.setSelectedElement?.(null)}
           >
             Clear
           </button>
         </div>
       )}
+
+      {/* Main Input Container */}
       <div
-        className={classNames('relative shadow-xs border border-bolt-elements-borderColor backdrop-blur rounded-lg')}
+        className={classNames(
+          'relative shadow-sm border border-bolt-elements-borderColor/60 backdrop-blur-sm rounded-xl',
+          'transition-all duration-200 ease-out',
+          'hover:border-bolt-elements-borderColor/80 hover:shadow-md',
+          'focus-within:border-accent-500/60 focus-within:shadow-lg focus-within:shadow-accent-500/20',
+        )}
       >
         <textarea
           ref={props.textareaRef}
           className={classNames(
-            'w-full pl-4 pt-4 pr-16 outline-none resize-none text-bolt-elements-textPrimary placeholder-bolt-elements-textTertiary bg-transparent text-sm',
-            'transition-all duration-200',
-            'hover:border-bolt-elements-focus',
+            'w-full pl-4 pt-4 pr-16 pb-4 outline-none resize-none rounded-lg',
+            'text-bolt-elements-textPrimary placeholder-bolt-elements-textTertiary bg-transparent text-sm',
+            'transition-all duration-200 ease-out',
+            'focus:placeholder-bolt-elements-textSecondary',
+            'font-sans leading-relaxed',
           )}
           onDragEnter={(e) => {
             e.preventDefault();
             e.currentTarget.style.border = '2px solid #1488fc';
+            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(20, 136, 252, 0.1)';
           }}
           onDragOver={(e) => {
             e.preventDefault();
             e.currentTarget.style.border = '2px solid #1488fc';
+            e.currentTarget.style.boxShadow = '0 0 0 4px rgba(20, 136, 252, 0.1)';
           }}
           onDragLeave={(e) => {
             e.preventDefault();
             e.currentTarget.style.border = '1px solid var(--bolt-elements-borderColor)';
+            e.currentTarget.style.boxShadow = 'none';
           }}
           onDrop={(e) => {
             e.preventDefault();
             e.currentTarget.style.border = '1px solid var(--bolt-elements-borderColor)';
+            e.currentTarget.style.boxShadow = 'none';
 
             const files = Array.from(e.dataTransfer.files);
             files.forEach((file) => {
@@ -239,6 +267,8 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
           placeholder={props.chatMode === 'build' ? 'How can Bolt help you today?' : 'What would you like to discuss?'}
           translate="no"
         />
+
+        {/* Send Button */}
         <ClientOnly>
           {() => (
             <SendButton
@@ -258,17 +288,31 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
             />
           )}
         </ClientOnly>
-        <div className="flex justify-between items-center text-sm p-4 pt-2">
+
+        {/* Bottom Toolbar */}
+        <div className="flex justify-between items-center text-sm p-4 pt-2 border-t border-bolt-elements-borderColor/30 bg-bolt-elements-background-depth-1/20 rounded-b-xl">
+          {/* Left side - Action buttons */}
           <div className="flex gap-1 items-center">
             <ColorSchemeDialog designScheme={props.designScheme} setDesignScheme={props.setDesignScheme} />
             <McpTools />
-            <IconButton title="Upload file" className="transition-all" onClick={() => props.handleFileUpload()}>
+
+            {/* File Upload Button */}
+            <IconButton
+              title="Upload file"
+              className="transition-all duration-200 hover:scale-105"
+              onClick={() => props.handleFileUpload()}
+            >
               <div className="i-ph:paperclip text-xl"></div>
             </IconButton>
+
+            {/* Enhance Prompt Button */}
             <IconButton
               title="Enhance prompt"
               disabled={props.input.length === 0 || props.enhancingPrompt}
-              className={classNames('transition-all', props.enhancingPrompt ? 'opacity-100' : '')}
+              className={classNames(
+                'transition-all duration-200 hover:scale-105',
+                props.enhancingPrompt ? 'opacity-100' : 'hover:opacity-80',
+              )}
               onClick={() => {
                 props.enhancePrompt?.();
                 toast.success('Prompt enhanced!');
@@ -281,52 +325,72 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
               )}
             </IconButton>
 
+            {/* Speech Recognition Button */}
             <SpeechRecognitionButton
               isListening={props.isListening}
               onStart={props.startListening}
               onStop={props.stopListening}
               disabled={props.isStreaming}
             />
+
+            {/* Chat Mode Toggle */}
             {props.chatStarted && (
               <IconButton
-                title="Discuss"
+                title="Toggle chat mode"
                 className={classNames(
-                  'transition-all flex items-center gap-1 px-1.5',
+                  'transition-all duration-200 flex items-center gap-1.5 px-2 py-1 rounded-md',
                   props.chatMode === 'discuss'
-                    ? '!bg-bolt-elements-item-backgroundAccent !text-bolt-elements-item-contentAccent'
-                    : 'bg-bolt-elements-item-backgroundDefault text-bolt-elements-item-contentDefault',
+                    ? '!bg-bolt-elements-item-backgroundAccent !text-bolt-elements-item-contentAccent shadow-sm'
+                    : 'bg-bolt-elements-item-backgroundDefault text-bolt-elements-item-contentDefault hover:bg-bolt-elements-item-backgroundActive',
                 )}
                 onClick={() => {
                   props.setChatMode?.(props.chatMode === 'discuss' ? 'build' : 'discuss');
                 }}
               >
-                <div className={`i-ph:chats text-xl`} />
-                {props.chatMode === 'discuss' ? <span>Discuss</span> : <span />}
+                <div className="i-ph:chats text-lg" />
+                {props.chatMode === 'discuss' ? <span className="text-xs font-medium">Discuss</span> : <></>}
               </IconButton>
             )}
+
+            {/* Model Settings Toggle */}
             <IconButton
-              title="Model Settings"
-              className={classNames('transition-all flex items-center gap-1', {
-                'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent':
+              title="Toggle model settings"
+              className={classNames('transition-all duration-200 flex items-center gap-1.5 px-2 py-1 rounded-md', {
+                'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent shadow-sm':
                   props.isModelSettingsCollapsed,
-                'bg-bolt-elements-item-backgroundDefault text-bolt-elements-item-contentDefault':
+                'bg-bolt-elements-item-backgroundDefault text-bolt-elements-item-contentDefault hover:bg-bolt-elements-item-backgroundActive':
                   !props.isModelSettingsCollapsed,
               })}
               onClick={() => props.setIsModelSettingsCollapsed(!props.isModelSettingsCollapsed)}
               disabled={!props.providerList || props.providerList.length === 0}
             >
               <div className={`i-ph:caret-${props.isModelSettingsCollapsed ? 'right' : 'down'} text-lg`} />
-              {props.isModelSettingsCollapsed ? <span className="text-xs">{props.model}</span> : <span />}
+              {props.isModelSettingsCollapsed ? (
+                <span className="text-xs font-medium max-w-20 truncate">{props.model}</span>
+              ) : (
+                <></>
+              )}
             </IconButton>
           </div>
-          {props.input.length > 3 ? (
-            <div className="text-xs text-bolt-elements-textTertiary">
-              Use <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Shift</kbd> +{' '}
-              <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Return</kbd> a new line
-            </div>
-          ) : null}
-          <SupabaseConnection />
-          <ExpoQrModal open={props.qrModalOpen} onClose={() => props.setQrModalOpen(false)} />
+
+          {/* Right side - Help text and connections */}
+          <div className="flex items-center gap-3">
+            {props.input.length > 3 && (
+              <div className="text-xs text-bolt-elements-textTertiary flex items-center gap-1">
+                <span>Use</span>
+                <kbd className="px-1.5 py-0.5 rounded-md bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor/60 text-xs font-mono">
+                  Shift
+                </kbd>
+                <span>+</span>
+                <kbd className="px-1.5 py-0.5 rounded-md bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor/60 text-xs font-mono">
+                  Return
+                </kbd>
+                <span>for new line</span>
+              </div>
+            )}
+            <SupabaseConnection />
+            <ExpoQrModal open={props.qrModalOpen} onClose={() => props.setQrModalOpen(false)} />
+          </div>
         </div>
       </div>
     </div>
