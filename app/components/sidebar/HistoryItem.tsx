@@ -68,8 +68,13 @@ export function HistoryItem({
   return (
     <div
       className={classNames(
-        'group rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50/80 dark:hover:bg-gray-800/30 overflow-hidden flex justify-between items-center px-3 py-2 transition-colors',
-        { 'text-gray-900 dark:text-white bg-gray-50/80 dark:bg-gray-800/30': isActiveChat },
+        'group rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50/80 dark:hover:bg-gray-800/30 overflow-hidden flex justify-between items-center px-3 py-2 transition-all duration-200 ease-out',
+        'border border-transparent hover:border-gray-200 dark:hover:border-gray-700',
+        'shadow-sm hover:shadow-md',
+        {
+          'text-gray-900 dark:text-white bg-gray-50/80 dark:bg-gray-800/30 border-gray-200 dark:border-gray-700':
+            isActiveChat,
+        },
         { 'cursor-pointer': selectionMode },
       )}
       onClick={selectionMode ? handleItemClick : undefined}
@@ -89,7 +94,7 @@ export function HistoryItem({
         <form onSubmit={handleSubmit} className="flex-1 flex items-center gap-2">
           <input
             type="text"
-            className="flex-1 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-md px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-1 focus:ring-purple-500/50"
+            className="flex-1 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-md px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/30 transition-all duration-200"
             autoFocus
             value={currentDescription}
             onChange={handleChange}
@@ -98,7 +103,7 @@ export function HistoryItem({
           />
           <button
             type="submit"
-            className="i-ph:check h-4 w-4 text-gray-500 hover:text-purple-500 transition-colors"
+            className="i-ph:check h-4 w-4 text-gray-500 hover:text-purple-500 transition-colors duration-200"
             onMouseDown={handleSubmit}
           />
         </form>
@@ -108,15 +113,13 @@ export function HistoryItem({
           className="flex w-full relative truncate block"
           onClick={selectionMode ? handleItemClick : undefined}
         >
-          <WithTooltip tooltip={currentDescription}>
-            <span className="truncate pr-24">{currentDescription}</span>
-          </WithTooltip>
+          <span className="truncate pr-24">{currentDescription}</span>
           <div
             className={classNames(
               'absolute right-0 top-0 bottom-0 flex items-center bg-transparent px-2 transition-colors',
             )}
           >
-            <div className="flex items-center gap-2.5 text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-2.5 text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-all duration-200">
               <ChatActionButton
                 toolTipContent="Export"
                 icon="i-ph:download-simple h-4 w-4"
@@ -146,7 +149,7 @@ export function HistoryItem({
               <ChatActionButton
                 toolTipContent="Delete"
                 icon="i-ph:trash h-4 w-4"
-                className="hover:text-red-500 dark:hover:text-red-400"
+                className="hover:text-red-500 dark:hover:text-red-400 hover:scale-110 transition-transform duration-200"
                 onClick={handleDeleteClick}
               />
             </div>
@@ -178,7 +181,7 @@ const ChatActionButton = forwardRef(
         <button
           ref={ref}
           type="button"
-          className={`text-gray-400 dark:text-gray-500 hover:text-purple-500 dark:hover:text-purple-400 transition-colors ${icon} ${className ? className : ''}`}
+          className={`text-gray-400 dark:text-gray-500 hover:text-purple-500 dark:hover:text-purple-400 transition-all duration-200 ${icon} ${className ? className : ''} hover:scale-105`}
           onClick={onClick}
         />
       </WithTooltip>

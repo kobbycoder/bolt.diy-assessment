@@ -305,7 +305,7 @@ export const Menu = () => {
 
   const handleDuplicate = async (id: string) => {
     await duplicateCurrentChat(id);
-    loadEntries(); // Reload the list after duplication
+    await loadEntries(); // Reload the list after duplication
   };
 
   const handleSettingsClick = () => {
